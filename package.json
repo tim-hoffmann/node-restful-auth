@@ -1,0 +1,22 @@
+{
+  "name": "node-restful-auth",
+  "version": "1.0.0",
+  "description": "Token-based authentication for node-restful.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tim Hoffmann",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.13.4",
+    "jsonwebtoken": "^5.5.4",
+    "kerberos": "0.0.18",
+    "method-override": "^2.3.5",
+    "mongodb": "^2.1.5",
+    "mongoose": "^4.4.1",
+    "morgan": "^1.6.1",
+    "node-restful": "^0.2.5"
+  }
+}
