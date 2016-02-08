@@ -1,12 +1,24 @@
 var bcrypt = require('bcryptjs'),
-  jwt = require('jsonwebtoken');
+jwt = require('jsonwebtoken');
 var userModel = require('../models/user');
 var config = require('../../config');
 
 userModel.methods(['get', 'post', 'put', 'delete']);
 
+// GET
 userModel.before('get', authenticateToken);
-userModel.before('get', authorize);
+userModel.before('get', function(req, res, next) {
+  userModel.findOne({
+    _id: req.decoded._doc._id
+  },
+  function(err, user) {
+    if (err) throw err;
+
+    return res.json(user);
+  });
+});
+
+// POST
 userModel.before('post', hashPassword);
 userModel.before('post', function(req, res, next) {
   userModel.findOne({
@@ -22,11 +34,16 @@ userModel.before('post', function(req, res, next) {
     next();
   });
 });
+
+// PUT
 userModel.before('put', authenticateToken);
 userModel.before('put', hashPassword);
+
+// DELETE
 userModel.before('delete', authenticateToken);
 userModel.before('delete', authorize);
 
+// Route for User Authentication
 userModel.route('authenticate.post', function(req, res, next) {
   userModel.findOne({
     name: req.body.name
@@ -50,9 +67,10 @@ userModel.route('authenticate.post', function(req, res, next) {
         success: false,
         message: 'Authentication failed.' });
     }
-  })
+  });
 });
 
+// Token Authentication
 function authenticateToken(req, res, next) {
   // check header or url parameters or post parameters for token
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -81,6 +99,7 @@ function authenticateToken(req, res, next) {
   }
 }
 
+// Check permission for User Object
 function authorize(req, res, next) {
   var requestedId = req.body._id || req.params.id;
 
@@ -91,6 +110,7 @@ function authorize(req, res, next) {
   next();
 }
 
+// Password hashing
 function hashPassword(req, res, next) {
   if(!req.body.password) next();
 
@@ -103,6 +123,7 @@ function hashPassword(req, res, next) {
   });
 }
 
+// Comparing Password Hash
 function comparePasswordHash(password, passwordHash) {
   return bcrypt.compareSync(password, passwordHash);
 }
