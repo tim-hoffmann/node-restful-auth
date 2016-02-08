@@ -104,11 +104,7 @@ function hashPassword(req, res, next) {
 }
 
 function comparePasswordHash(password, passwordHash) {
-  bcrypt.compare(password, passwordHash, function(err, res) {
-    if (err) throw err;
-
-    return res;
-  });
+  return bcrypt.compareSync(password, passwordHash);
 }
 
 module.exports = userModel;
