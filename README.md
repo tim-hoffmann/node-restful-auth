@@ -1,3 +1,5 @@
+![](https://david-dm.org/tim-hoffmann/node-restful-auth.svg)
+
 # node-restful-auth
 This project adds token-based user authentication to node-restful.
 
